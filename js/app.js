@@ -1,22 +1,33 @@
 //Declare Number of enemies
 var enemyCount = 6;
+var positionx = 10;
 var enemypositions = [60, 145, 230];
-var enemyspeeds = [100, 120, 140, 160, 180, 200];
-
+var playerpositionx = 200;
+var playerpositiony = 300;
+var canvaswidth = 505;
+//var enemyspeeds = [100, 120, 140, 160, 180, 200];
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started   
-    this.x = 10;
-    this.y = Math.floor(Math.random() * ((230-60)+1) + 60);
+    this.x = positionx;
+    this.y = enemypositions[getRandomInt(enemypositions.length)];
     this.speed = Math.random()*100 + 10;
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 };
 
-
+//Enemy reset
+Enemy.prototype.reset = function() {
+  this.x = positionx;
+  this.y = enemypositions[getRandomInt(enemypositions.length)];
+    this.speed = Math.random()*100 + 10;
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -24,8 +35,12 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-this.x = this.x + (this.speed * dt);
-
+    if(this.x > canvaswidth){
+    this.reset();
+    }
+    else{
+    this.x = this.x + (this.speed * dt);  
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -36,12 +51,13 @@ Enemy.prototype.render = function() {
 //Player Class
 var Player = function() {
 this.sprite = 'images/char-boy.png';
-
-//Initialize Position
-this.x = 200;
-this.y =300;
+this.reset();
 };
 
+Player.prototype.reset = function() {
+ this.x = playerpositionx;
+this.y = playerpositiony;
+};
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
