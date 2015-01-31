@@ -5,7 +5,9 @@ var enemypositions = [60, 145, 230];
 var playerpositionx = 200;
 var playerpositiony = 300;
 var canvaswidth = 505;
-//var enemyspeeds = [100, 120, 140, 160, 180, 200];
+var enemyspeeds = [100, 110, 120, 130, 140, 150];
+var colwidth =101;
+var colheight=83;
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
@@ -16,7 +18,7 @@ var Enemy = function() {
     // we've provided one for you to get started   
     this.x = positionx;
     this.y = enemypositions[getRandomInt(enemypositions.length)];
-    this.speed = Math.random()*100 + 10;
+    this.speed = enemyspeeds[Math.floor(Math.random() * enemyspeeds.length)];
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -35,12 +37,15 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x = this.x + (this.speed * dt);
     if(this.x > canvaswidth){
     this.reset();
     }
-    else{
-    this.x = this.x + (this.speed * dt);  
+     if ( (Math.abs(this.x - Player.x) < 80) && (Math.abs(this.y - Player.y) < 60) ){
+        Player.reset();
+        score.addDefeat();
     }
+    
 };
 
 // Draw the enemy on the screen, required method for game
@@ -72,8 +77,24 @@ Player.prototype.render = function() {
 };
 
 //Player handleInput
-Player.prototype.handleInput = function(){
-
+Player.prototype.handleInput = function(keyCode){
+switch(keyCode)
+    {
+      case 'left':
+        this.x-= colwidth;
+        break;
+      case 'right':
+        this.x+= colwidth;
+        break;
+      case 'up':
+        this.y -= colheight;
+        break;
+      case 'down':
+        this.y += colheight;
+        break;
+      default:
+        break;
+    }
 };
 
 // Now instantiate your objects.
