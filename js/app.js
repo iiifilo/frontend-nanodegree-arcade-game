@@ -1,15 +1,18 @@
-//Declare Number of enemies
+//Declare variables
 var enemyCount = 6;
 var positionx = 10;
 var enemypositions = [60, 145, 230];
 var playerpositionx = 200;
 var playerpositiony = 400;
-var canvaswidth = 505;
+var canvaswidth = 500;
 var enemyspeeds = [100, 110, 120, 130, 140, 150];
-var colwidth =101;
-var colheight=83;
+var colwidth = 101;
+var colheight = 83;
+
+//This function will return a random integer 
+// Used for enemies uneven distribution
 function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
+    return Math.floor(Math.random() * max);
 }
 
 // Enemies our player must avoid
@@ -26,9 +29,9 @@ var Enemy = function() {
 
 //Enemy reset
 Enemy.prototype.reset = function() {
-  this.x = positionx;
-  this.y = enemypositions[getRandomInt(enemypositions.length)];
-    this.speed = Math.random()*100 + 10;
+    this.x = positionx;
+    this.y = enemypositions[getRandomInt(enemypositions.length)];
+    this.speed = Math.random() * 100 + 10;
 };
 
 // Update the enemy's position, required method for game
@@ -38,10 +41,10 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x = this.x + (this.speed * dt);
-    if(this.x > canvaswidth){
-    this.reset();
+    if (this.x > canvaswidth) {
+        this.reset();
     }
-     if ( (Math.abs(this.x - Player.x) < 80) && (Math.abs(this.y - Player.y) < 60) ){
+    if ((Math.abs(this.x - Player.x) < 80) && (Math.abs(this.y - Player.y) < 60)) {
         Player.reset();
         //score.addDefeat();
     }
@@ -61,10 +64,10 @@ Enemy.prototype.render = function() {
 
 //Collision check
 Enemy.prototype.collision = function(enemy, player) {
-    return  !(player.left > enemy.right  || 
-             player.right < enemy.left  || 
-             player.top > enemy.bottom  || 
-             player.bottom < enemy.top);
+    return !(player.left > enemy.right ||
+        player.right < enemy.left ||
+        player.top > enemy.bottom ||
+        player.bottom < enemy.top);
 }
 Enemy.prototype.collisionsCheck = function(enemy, player) {
     if (this.collision(enemy, player)) {
@@ -74,37 +77,37 @@ Enemy.prototype.collisionsCheck = function(enemy, player) {
 
 //Player Class
 var Player = function() {
-this.sprite = 'images/char-boy.png';
-this.reset();
+    this.sprite = 'images/char-boy.png';
+    this.reset();
 };
 
 Player.prototype.reset = function() {
- this.x = playerpositionx;
-this.y = playerpositiony;
+    this.x = playerpositionx;
+    this.y = playerpositiony;
 };
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 //Player Update
 Player.prototype.update = function(dt) {
-if(this.x >= canvaswidth) {
-    this.x = (this.x - colwidth);
-  }    
-  if(this.x <= 0) {
-    this.x = 0;
-  }
-  if(this.y >= playerpositiony ) {
-    this.y = playerpositiony;
-  }  
-  if(this.y <= 0)
-  {
-    this.reset();
-  }
-  //Player perimeter for collision detection
-this.left = this.x;
-this.top = this.y;
-this.right = this.x + 75;
-this.bottom = this.y + 75;
+
+    if (this.x >= canvaswidth) {
+        this.x = (this.x - colwidth);
+    }
+    if (this.x <= 0) {
+        this.x = 0;
+    }
+    if (this.y >= playerpositiony) {
+        this.y = playerpositiony;
+    }
+    if (this.y <= 0) {
+        this.reset();
+    }
+    //Player perimeter for collision detection
+    this.left = this.x;
+    this.top = this.y;
+    this.right = this.x + 75;
+    this.bottom = this.y + 75;
 };
 
 
@@ -114,23 +117,22 @@ Player.prototype.render = function() {
 };
 
 //Player handleInput
-Player.prototype.handleInput = function(keyCode){
-switch(keyCode)
-    {
-      case 'left':
-        this.x-= colwidth;
-        break;
-      case 'right':
-        this.x+= colwidth;
-        break;
-      case 'up':
-        this.y -= colheight;
-        break;
-      case 'down':
-        this.y += colheight;
-        break;
-      default:
-        break;
+Player.prototype.handleInput = function(keyCode) {
+    switch (keyCode) {
+        case 'left':
+            this.x -= colwidth;
+            break;
+        case 'right':
+            this.x += colwidth;
+            break;
+        case 'up':
+            this.y -= colheight;
+            break;
+        case 'down':
+            this.y += colheight;
+            break;
+        default:
+            break;
     }
 };
 
@@ -140,7 +142,7 @@ switch(keyCode)
 var player = new Player();
 var allEnemies = [];
 var i = 0;
-for (var i=0; i<enemyCount; i++) {
+for (var i = 0; i < enemyCount; i++) {
     allEnemies.push(new Enemy());
 };
 
