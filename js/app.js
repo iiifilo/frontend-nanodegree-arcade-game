@@ -3,7 +3,7 @@ var enemyCount = 6;
 var positionx = 10;
 var enemypositions = [60, 145, 230];
 var playerpositionx = 200;
-var playerpositiony = 300;
+var playerpositiony = 400;
 var canvaswidth = 505;
 var enemyspeeds = [100, 110, 120, 130, 140, 150];
 var colwidth =101;
@@ -43,15 +43,34 @@ Enemy.prototype.update = function(dt) {
     }
      if ( (Math.abs(this.x - Player.x) < 80) && (Math.abs(this.y - Player.y) < 60) ){
         Player.reset();
-        score.addDefeat();
+        //score.addDefeat();
     }
-    
+    //Enemy  perimeter  collision detection
+    this.left = this.x;
+    this.top = this.y;
+    this.right = this.x + 75;
+    this.bottom = this.y + 75;
+
+    this.collisionsCheck(this, player);
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+//Collision check
+Enemy.prototype.collision = function(enemy, player) {
+    return  !(player.left > enemy.right  || 
+             player.right < enemy.left  || 
+             player.top > enemy.bottom  || 
+             player.bottom < enemy.top);
+}
+Enemy.prototype.collisionsCheck = function(enemy, player) {
+    if (this.collision(enemy, player)) {
+        player.reset();
+    }
+}
 
 //Player Class
 var Player = function() {
@@ -68,8 +87,26 @@ this.y = playerpositiony;
 // a handleInput() method.
 //Player Update
 Player.prototype.update = function(dt) {
-
+if(this.x >= canvaswidth) {
+    this.x = (this.x - colwidth);
+  }    
+  if(this.x <= 0) {
+    this.x = 0;
+  }
+  if(this.y >= playerpositiony ) {
+    this.y = playerpositiony;
+  }  
+  if(this.y <= 0)
+  {
+    this.reset();
+  }
+  //Player perimeter for collision detection
+this.left = this.x;
+this.top = this.y;
+this.right = this.x + 75;
+this.bottom = this.y + 75;
 };
+
 
 //Player Render
 Player.prototype.render = function() {
